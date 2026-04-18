@@ -46,24 +46,36 @@ col2.metric("Total Countries", competitor['country'].nunique())
 col3.metric("Highest Points", ranking['points'].max())
 
 # =========================
-# FILTERED TABLE
+# CLEAN TABLE DISPLAY
 # =========================
-st.subheader("Filtered Competitor")
-st.dataframe(filtered_df)
+st.subheader("📊 Filtered Competitor")
+
+clean_df = filtered_df[['name', 'country', 'rank', 'points']]
+
+clean_df = clean_df.rename(columns={
+    'name': 'Player Name',
+    'country': 'Country',
+    'rank': 'Rank',
+    'points': 'Points'
+})
+
+st.dataframe(clean_df)
 
 # =========================
 # CHARTS
 # =========================
 
 # Top Players
-st.subheader("Top Players by Points")
+st.subheader("🏆 Top Players by Points")
+
 top_df = df.sort_values(by="points", ascending=False).head(10)
 
 fig1 = px.bar(top_df, x="name", y="points", title="Top 10 Players")
 st.plotly_chart(fig1)
 
 # Country Distribution
-st.subheader("Competitor by Country")
+st.subheader("🌍 Competitor by Country")
+
 country_df = competitor['country'].value_counts().reset_index()
 country_df.columns = ['country', 'total']
 
@@ -73,18 +85,23 @@ st.plotly_chart(fig2)
 # =========================
 # LEADERBOARD
 # =========================
-st.subheader("Leaderboard")
+st.subheader("🥇 Leaderboard")
 
 leader_df = df.sort_values(by="rank").head(10)
-st.table(leader_df[['name', 'rank', 'points']])
+
+leader_df = leader_df[['name', 'rank', 'points']]
+leader_df.columns = ['Player Name', 'Rank', 'Points']
+
+st.table(leader_df)
 
 # =========================
 # INSIGHTS
 # =========================
-st.subheader("Key Insights")
+st.subheader("📌 Key Insights")
+
 st.write("""
 - USA leads in number of competitors.
-- Ranking shows strong stability at top.
+- Rankings show strong stability at the top.
 - Competitor distribution is uneven across countries.
-- Top 10 players contribute heavily to total points.
+- Top players dominate total points.
 """)
